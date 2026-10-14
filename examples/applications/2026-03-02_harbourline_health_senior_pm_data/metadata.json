@@ -1,0 +1,27 @@
+{
+  "company": "Harbourline Health",
+  "position": "Senior Product Manager, Data",
+  "market": "UK",
+  "source_url": "https://example.com/jobs/harbourline-senior-pm-data",
+  "created": "2026-03-02",
+  "status": "drafted",
+  "archetype": "IC",
+  "fit_score": 84,
+  "page_count": 2,
+  "last_rendered": "2026-09-07T23:10:15",
+  "outputs": {
+    "cv_pdf": "Sam Okafor - Harbourline Health - Senior Product Manager, Data CV.pdf",
+    "cv_docx": "Sam Okafor - Harbourline Health - Senior Product Manager, Data CV.docx",
+    "cover_letter_pdf": "Sam Okafor - Harbourline Health - Senior Product Manager, Data Cover Letter.pdf",
+    "cover_letter_docx": "Sam Okafor - Harbourline Health - Senior Product Manager, Data Cover Letter.docx"
+  },
+  "stage_log": [
+    {
+      "stage": "recruiter",
+      "date": "2026-03-09",
+      "with": "Talent partner",
+      "outcome": "progressed"
+    }
+  ],
+  "source_of_truth": "resume.md"
+}

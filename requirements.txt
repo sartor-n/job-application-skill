@@ -1,0 +1,6 @@
+python-docx>=1.1
+pyyaml>=6.0
+pypdf>=4.0
+# Windows only: lets the PDF be exported through Word itself, the most faithful
+# renderer for a .docx. Skip it if you use LibreOffice instead.
+pywin32>=306; sys_platform == "win32"

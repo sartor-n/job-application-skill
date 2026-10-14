@@ -1,0 +1,37 @@
+# Archetypes: the two to four "versions of you" a job description can call for.
+# master_cv.md tags sections with [TAG]. [ALL] is reserved and means "used in every archetype".
+# Onboarding offers these three starters. Rename, delete or add entries freely.
+archetypes:
+  - tag: IC
+    name: Hands-on individual contributor
+    target_titles: ["Senior {{DISCIPLINE}}", "Staff {{DISCIPLINE}}", "Lead {{DISCIPLINE}}"]
+    jd_signals:
+      - hands-on delivery, working directly with engineers or specialists
+      - technical depth, tooling, experimentation, metrics
+    emphasise:
+      - concrete things shipped, with numbers
+      - technical judgement and craft
+    drop_from_cv:
+      - people-management and organisational design detail
+
+  - tag: LEAD
+    name: Team and function leader
+    target_titles: ["Head of {{FUNCTION}}", "Director of {{FUNCTION}}", "VP {{FUNCTION}}"]
+    jd_signals:
+      - hiring, mentoring, organisational design
+      - strategy, portfolio, budget or P&L, board and executive stakeholders
+    emphasise:
+      - team building and outcomes delivered through others
+      - commercial results and strategy
+    drop_from_cv:
+      - deep technical jargon unless framed as a business capability
+
+  - tag: HYBRID
+    name: Player-coach
+    target_titles: ["Group {{DISCIPLINE}}", "Principal {{DISCIPLINE}}", "Lead {{DISCIPLINE}}"]
+    jd_signals:
+      - mix of hands-on ownership and coaching or mentoring
+      - owning a complex domain while raising the bar for how the team works
+    emphasise:
+      - domain ownership plus frameworks and mentoring
+    drop_from_cv: []

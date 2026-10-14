@@ -1,0 +1,35 @@
+# Fictional example.
+archetypes:
+  - tag: IC
+    name: Hands-on data product manager
+    target_titles: ["Senior Product Manager, Data", "Staff Product Manager", "Senior PM, Analytics"]
+    jd_signals:
+      - works directly with data engineers and analysts
+      - data platforms, pipelines, dashboards, data quality, experimentation
+    emphasise:
+      - products shipped in regulated settings, adoption numbers
+      - technical judgement on data architecture trade-offs
+    drop_from_cv:
+      - hiring and organisational design detail
+
+  - tag: LEAD
+    name: Head of product
+    target_titles: ["Head of Product", "Director of Product", "Product Lead"]
+    jd_signals:
+      - hiring, mentoring, running a product team
+      - strategy, portfolio, budget, executive stakeholders
+    emphasise:
+      - team building and outcomes through others
+      - commercial results
+    drop_from_cv:
+      - pipeline and schema-level technical detail
+
+  - tag: HYBRID
+    name: Player-coach
+    target_titles: ["Group Product Manager", "Principal Product Manager", "Lead Product Manager"]
+    jd_signals:
+      - owns a domain and mentors other PMs
+      - establishes frameworks and raises the bar
+    emphasise:
+      - domain ownership plus mentoring and process
+    drop_from_cv: []

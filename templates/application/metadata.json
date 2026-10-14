@@ -1,0 +1,14 @@
+{
+  "company": "{{COMPANY}}",
+  "position": "{{ROLE}}",
+  "market": "{{MARKET}}",
+  "source_url": "{{URL}}",
+  "created": "{{DATE}}",
+  "status": "intake",
+  "archetype": null,
+  "fit_score": null,
+  "page_count": null,
+  "last_rendered": null,
+  "outputs": {},
+  "stage_log": []
+}

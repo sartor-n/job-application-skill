@@ -1,0 +1,50 @@
+# Fictional example profile. Sam Okafor does not exist.
+schema_version: 1
+onboarding_complete: true
+
+identity:
+  name: "Sam Okafor"
+  headline: "Senior Product Manager"
+
+contact:
+  email: "sam.okafor@example.com"
+  linkedin: "https://linkedin.com/in/sam-okafor-example"
+  portfolio: ""
+  phone: "+44 7000 000000"
+  show_phone: false
+  work_rights_line: "Right to work in the UK and EU"
+  location_line: "Leeds, UK"
+
+markets:
+  - code: UK
+    label: United Kingdom
+    page_limit: 2
+    english: british
+    location_line: "Leeds, UK"
+    show_work_rights: false
+  - code: NL
+    label: Netherlands
+    page_limit: 2
+    english: british
+    location_line: "Leeds, UK (relocating to Amsterdam, available Q2 2027)"
+    show_work_rights: true
+
+style:
+  english: british
+  no_dashes: true
+  summary_paragraphs: 3
+  bold_keywords: true
+  checkmark: "✓"
+  section_order: [PROFILE, EXPERTISE, ACHIEVEMENTS, EXPERIENCE, EDUCATION, PROJECTS]
+
+render:
+  page_size: A4
+  margins_mm: [16, 14, 16, 14]
+  font_family: "Segoe UI, Calibri, Arial, sans-serif"
+  body_pt: 10
+  line_spacing: 1.25
+  para_after_pt: 6
+  accent: "#0f766e"
+  heading_colour: "#115e59"
+  text_colour: "#1e293b"
+  filename_pattern: "{name} - {company} - {position} {doc}"

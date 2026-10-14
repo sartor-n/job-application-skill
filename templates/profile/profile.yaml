@@ -1,0 +1,46 @@
+# Profile configuration. Written by onboarding. Safe to hand-edit afterwards.
+# Values in {{DOUBLE_BRACES}} are placeholders that onboarding replaces.
+schema_version: 1
+onboarding_complete: false
+
+identity:
+  name: "{{FULL_NAME}}"
+  headline: "{{DEFAULT_HEADLINE}}"      # default title under the name, e.g. "Senior Product Manager"
+
+contact:
+  email: "{{EMAIL}}"
+  linkedin: ""                          # full URL, e.g. https://linkedin.com/in/handle
+  portfolio: ""                         # personal site or GitHub URL, optional
+  phone: ""                             # kept for reference; printed only if show_phone is true
+  show_phone: false
+  work_rights_line: ""                  # e.g. "Right to work in the UK" or "EU citizen"; empty to omit
+  location_line: ""                     # default location shown on the CV, e.g. "Leeds, UK"
+
+# One entry per market you apply in. The CV picks the market from resume.md frontmatter.
+markets:
+  - code: DEFAULT
+    label: Default market
+    page_limit: 2                       # hard page cap; render_cv.py fails the build above this
+    english: british                    # british or american
+    location_line: ""                   # overrides contact.location_line for this market
+    show_work_rights: true              # print contact.work_rights_line in this market
+
+style:
+  english: british
+  no_dashes: true                       # forbid em and en dashes in all generated text
+  summary_paragraphs: 3                 # short blank-line-separated paragraphs in the profile
+  bold_keywords: true                   # bold the top JD keywords in the profile paragraphs
+  checkmark: "✓"                       # marker after each requirement in cover letters; "" to omit
+  section_order: [PROFILE, EXPERTISE, ACHIEVEMENTS, EXPERIENCE, EDUCATION, PROJECTS]
+
+render:
+  page_size: A4                         # A4 or Letter
+  margins_mm: [16, 14, 16, 14]          # top, right, bottom, left
+  font_family: "Segoe UI, Calibri, Arial, sans-serif"
+  body_pt: 10
+  line_spacing: 1.25
+  para_after_pt: 6
+  accent: "#0284c7"                     # header rule and links
+  heading_colour: "#0369a1"             # section headings
+  text_colour: "#1e293b"
+  filename_pattern: "{name} - {company} - {position} {doc}"   # {doc} becomes "CV" or "Cover Letter"
