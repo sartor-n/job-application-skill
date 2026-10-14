@@ -23,6 +23,10 @@ Use one of these instead:
 * **Claude Code**: open the Claude desktop app and switch to the **Code** tab, or use Claude Code in a terminal. It needs a paid Claude plan.
 * **Codex**: OpenAI's assistant that works on your computer, available as an app or in a terminal. It needs a paid ChatGPT plan.
 
+| Claude: open the desktop app and pick **Code** | Codex: the desktop app |
+|:---:|:---:|
+| <img src="docs/images/claude-desktop-code.png" alt="The Claude app's three modes, Chat, Cowork and Code, with Code selected" width="320"> | <img src="docs/images/codex-app.png" alt="The Codex desktop app" width="480"> |
+
 Why? This assistant creates and keeps files for you: your career profile, a folder for each job, and the finished CV and cover letter documents. A plain chat window can't do that.
 
 ## How to install
@@ -59,6 +63,8 @@ Just talk to it. For example:
 ## Licence
 
 Free to use and share under the [MIT licence](LICENSE).
+
+The images in `docs/images` belong to their owners and are not covered by the MIT licence: the Claude illustration is adapted from [Claude Academy](https://claude.com/resources/tutorials/navigating-the-claude-desktop-app) (Anthropic) and the Codex screenshot comes from [OpenAI's Codex documentation](https://developers.openai.com/codex/app).
 
 ---
 
