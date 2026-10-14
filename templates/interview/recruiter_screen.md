@@ -7,7 +7,7 @@
 ---
 
 ## 1. Opening pitch (60 to 90 seconds, rehearse it)
-<!-- Who you are in one line, the lead differentiator, two proof points with numbers, why this role now. -->
+<!-- Who you are, the evidenced differentiator, relevant verified proof points, and why this role serves your goals now. Qualitative outcomes are valid. -->
 
 ## 2. Why this company, why this role
 <!-- Two or three specific reasons tied to their business, not generic praise. -->

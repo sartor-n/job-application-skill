@@ -13,13 +13,13 @@
 * **Archetype**: `[TAG]` (why in one line)
 * **Fit Score**: NN / 100
 
-Two to four sentences: what the company is actually hiring for, and why the profile does or does not match. Blunt, not polite.
+Explain what the company is hiring for and why the evidence matches or falls short. Be candid and respectful. Label unresolved material unknowns and any interim score provisional; do not treat missing information as confirmed lack of experience.
 
 ---
 
 ## 2. Alignments
 
-<!-- Each alignment: the JD line, then the evidence from master_cv.md or knowledge/, then a score out of 10. -->
+<!-- Each alignment: JD line, supported/transferable status, real source excerpt (master, knowledge or local learning), then a score out of 10. -->
 1. **{{Requirement}} (N/10)**
    * *JD*: ...
    * *Evidence*: ...
@@ -28,7 +28,7 @@ Two to four sentences: what the company is actually hiring for, and why the prof
 
 ## 3. Gaps and Mitigations
 
-<!-- Be honest. A gap with no mitigation is still a gap. -->
+<!-- Separate confirmed gaps from unknowns. Resolve material unknowns before a definitive assessment or tailoring. -->
 1. **{{Gap}}**
    * *Gap*: ...
    * *Mitigation*: ...
@@ -37,7 +37,7 @@ Two to four sentences: what the company is actually hiring for, and why the prof
 
 ## 4. Keywords to Mirror
 
-<!-- 10 to 15 keywords or phrases from the JD. Mark the 3 to 5 to use twice with (x2). Everything else appears once. -->
+<!-- Only JD keywords supported by candidate evidence. Do not require a count or imply unsupported skills. -->
 * ...
 
 ---
@@ -47,3 +47,13 @@ Two to four sentences: what the company is actually hiring for, and why the prof
 **PROCEED** / **PROCEED WITH CAVEATS** / **DO NOT APPLY**
 
 One paragraph: what the tailored CV will lead with, and what the honest risk is.
+
+## 6. Fit with Your Goals and Wishes
+
+**Aligned** / **Tradeoff** / **Mismatch**
+
+Compare remit, seniority, growth, IC/management balance, preferred environment and constraints with the user's stated goals. Name benefits, compromises, dealbreakers and any employer-side unknowns. A good employer match can still be the wrong next move.
+
+## 7. Decision and Open Questions
+
+Record the user's decision after presenting the assessment. List any material missing background that must be resolved before tailoring. Reuse an existing informed decision unless material new information changes it.

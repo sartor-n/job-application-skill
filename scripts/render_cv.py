@@ -6,7 +6,7 @@ match and a DOCX you edited by hand exports the PDF you expect.
 Usage:
   python render_cv.py --resume <folder>/resume.md [--out-dir <folder>] [--data-dir D | --profile-dir P]
                       [--company X --position Y] [--market CODE] [--cover-letter]
-                      [--docx-only | --pdf-only] [--from-docx] [--html-pdf] [--dry-run]
+                      [--docx-only | --pdf-only] [--from-docx] [--html-pdf] [--dry-run] [--tailoring]
 
   --from-docx   Do not rebuild from markdown. Export the PDF from the DOCX already in the folder.
                 Use this after editing the DOCX by hand.
@@ -133,12 +133,24 @@ def main():
     ap.add_argument("--html-pdf", action="store_true",
                     help="build the PDF from HTML instead of the DOCX (will not match the DOCX)")
     ap.add_argument("--dry-run", action="store_true", help="print the parsed structure and exit")
+    ap.add_argument("--tailoring", action="store_true",
+                    help="required for newly tailored content; validate career and application readiness first")
     args = ap.parse_args()
 
     resume_path = os.path.abspath(args.resume)
     folder = os.path.dirname(resume_path)
     out_dir = os.path.abspath(args.out_dir) if args.out_dir else folder
-    os.makedirs(out_dir, exist_ok=True)
+    if args.tailoring:
+        from check_readiness import tailoring_errors
+        from paths import profile_dir
+        try:
+            errors = tailoring_errors(profile_dir(args.data_dir, args.profile_dir), folder)
+        except (OSError, ValueError, UnicodeError) as exc:
+            errors = [str(exc)]
+        if errors:
+            for error in errors:
+                print("BLOCKED: " + error)
+            return 3
 
     cv = parse_markdown_cv(resume_path)
     if args.dry_run:
@@ -149,6 +161,8 @@ def main():
     if profile is None:
         print("ERROR: no profile.yaml at " + pdir + ". Run onboarding first (see SKILL.md).")
         return 1
+
+    os.makedirs(out_dir, exist_ok=True)
 
     meta = cv.get("meta") or {}
     metadata, metadata_path = read_metadata(folder)

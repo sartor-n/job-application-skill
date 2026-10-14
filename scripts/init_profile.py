@@ -44,7 +44,8 @@ def main():
     if not os.path.exists(readme):
         with open(readme, "w", encoding="utf-8") as f:
             f.write("# Knowledge\n\nExtra facts about your experience that are not in master_cv.md, one file per topic. "
-                    "The assistant saves new facts here (with your approval) during tailoring and reads them when writing.\n")
+                    "The assistant saves confirmed reusable evidence here with its intended scope. "
+                    "See ../preferences.md for active rules and superseding corrections; application-only facts stay local.\n")
     print("DATA_DIR: " + root)
     return 0
 

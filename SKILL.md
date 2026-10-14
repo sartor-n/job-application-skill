@@ -1,144 +1,114 @@
 ---
 name: job-application
-description: Tailor a CV and cover letter to a job description with a blunt fit analysis first, render them to PDF and DOCX, and prepare interview notes. Use when the user shares a job ad or job URL, asks to apply for a role, tailor or roast their resume or CV, write a cover letter, prep for a recruiter screen or interview, review an offer, or set up their career profile. First run walks the user through onboarding.
+description: Build an evidence-backed career profile, assess job fit, tailor CVs and cover letters, render PDF and DOCX, and prepare interviews. Use for career-profile setup, job applications, CV tailoring or critique, cover letters, interview prep, and offer review. Requires sufficient career background before tailoring and learns scoped preferences from feedback. Works in Claude Code and Codex.
 metadata:
-  version: 1.0.0
-  schema_version: 1
+  version: 1.1.0
+  schema_version: 2
 ---
 
 # Job Application
 
-You help one person apply for jobs well: honest fit analysis, a tailored CV grounded in their real experience, a cover letter that maps requirements to evidence, rendered documents, and interview prep. Everything you write about them must be traceable to their master CV or knowledge files.
+Understand the person before writing about them. Learn their career, contributions, strengths, aspirations, desired position and working preferences. Tailor only claims supported by their own evidence. Remember reusable feedback with the scope the user intended.
 
-`<skill_dir>` below is the folder containing this file. Run scripts as `python "<skill_dir>/scripts/<name>.py" ...`.
+## Portable operation and data
 
-## 0. Data directory and first run
+This skill works in Claude Code and Codex. Use the host's available file, shell and browsing tools; no host-specific APIs, UI controls, or subagents are required. `<skill_dir>` is the directory containing this file. Commands use `python`; choose an available Python 3.9+ interpreter (`python3` or `py -3` where appropriate). Use the same interpreter for dependency checks and scripts. Dependencies are in `requirements.txt`. If PyYAML is missing, install it through the environment's normal approved dependency workflow; do not treat a partially parsed profile as complete.
 
-User data never lives inside this skill folder. It lives in a data directory resolved in this order:
-1. `JOB_APPLICATIONS_DIR` environment variable
-2. `./job-applications/` if it exists in the current working directory
-3. `~/job-applications/` (default)
+User data is separate from the skill. Resolution: `JOB_APPLICATIONS_DIR`, then `./job-applications/` if present, then `~/job-applications/`. Keep an explicitly chosen data directory consistent across commands using `--data-dir` or `--profile-dir`.
 
-Layout: `profile/` (profile.yaml, master_cv.md, preferences.md, archetypes.yaml, knowledge/) and `applications/<YYYY-MM-DD_company_role>/`.
+For career/application work, first run `python "<skill_dir>/scripts/paths.py"`. Read the existing profile and progress before asking questions. A request to review, install or edit the skill itself does not start personal onboarding.
 
-**On every invocation, first run** `python "<skill_dir>/scripts/paths.py"`. It prints the data dir and whether `profile.yaml` exists and is complete.
-* No `profile.yaml`, or `onboarding_complete: false`: run **Onboarding** (section 2) before anything else. Tell the user this is a one-time setup and roughly how long it takes (20 to 40 minutes with an existing CV file, longer from scratch).
-* `schema_version` lower than this file's: ask only the question groups that changed, then update the version.
-* Otherwise continue with the request.
+Profile files: `profile.yaml` (configuration and progress), `master_cv.md` (protected source), `preferences.md` (goals, preferences and confirmed learnings), `archetypes.yaml` (candidate positioning), `readiness.yaml` (coverage with source references), and `knowledge/` (career evidence). Each application has its own JD, fit analysis, readiness assessment, learning record and documents.
 
-## 1. Subcommands
+## First use and returning users
 
-Parse intent from the argument text or the message:
-* no arguments: first run, or ask for a job URL, pasted JD or file.
-* a URL, pasted JD text, or a file path: **New application** (section 4).
-* `render <folder>`: re-render after hand edits (section 6).
-* `prep <stage> <folder>`: interview prep (section 5). Stages: `recruiter`, `hiring_manager`, `panel`, `final`, `reference`, `offer`, `debrief`.
-* `profile edit <group>` | `profile import <file>` | `profile reonboard`: onboarding management (section 2).
-* `status`: list application folders with `metadata.json` status, latest stage and outputs.
+On first career use, explain the entire journey before asking intake questions. Read [onboarding_questions.md](references/onboarding_questions.md): career discovery, JD intake, candid fit analysis, decision to proceed, tailoring, review, documents and reusable learning. Recommend voice input using the visual invitation there. Typing remains equally valid; do not invent microphone locations or switch modes for the user.
 
-## 2. Onboarding
+If the profile is absent or incomplete, resume the missing discovery areas. An imported CV is evidence to explore, not proof that discovery is finished. `onboarding_complete` is a progress marker, never permission to bypass readiness. For schema 1 profiles, follow the targeted migration in [readiness.md](references/readiness.md); preserve existing answers and the master CV.
 
-Follow `references/onboarding_questions.md` exactly: eight groups, one at a time, write files after each group. Summary of the groups:
+Route by intent:
 
-| Group | Writes |
-|---|---|
-| G1 Storage | `init_profile.py [--data-dir D]` scaffolds the data dir |
-| G2 Identity and contact | `profile.yaml: identity, contact` |
-| G3 Markets and relocation | `profile.yaml: markets[]`, `preferences.md` location and early-career sections |
-| G4 Archetypes | `archetypes.yaml` (2 to 4 versions of the candidate) |
-| G5 Master CV | `master_cv.md` via `import_cv.py <file>` or interview; frontmatter `read_only: true` |
-| G6 Narrative preferences | `preferences.md` (see `references/preferences_schema.md`) |
-| G7 Style and rendering | `profile.yaml: style, render` |
-| G8 Confirm | `check_profile.py`, a baseline render, `onboarding_complete: true` |
+- No arguments: resume discovery, or ask for the next job once ready.
+- Job URL, JD text or JD file: save the intake and assess readiness, then fit.
+- CV file: import/discovery, not a new job application unless the user says so.
+- `profile edit <area>`, `profile import <file>`, `profile reonboard`: update only the requested area; back up before replacing the master. Reonboarding is an explicit reset, not a migration shortcut.
+- `render <folder>`: format/export existing content. Discovery is not required just to re-export, but substantive rewriting follows the tailoring gates.
+- `prep <stage> <folder>`: interview workflow below.
+- `status`: report saved applications and progress without forcing onboarding.
 
-Rules during onboarding:
-* Confirm names, URLs and numbers back before writing them. Expect voice-to-text noise.
-* Every master CV bullet must be defensible in an interview. When a claim sounds inflated, ask "what would you say if they asked you to prove that?".
-* Never write personal data into `<skill_dir>`.
-* `profile edit <group>` re-asks one group. `profile import <file>` redoes G5 (back up first, ask before replacing). `profile reonboard` runs `init_profile.py --force` (it backs up) then all groups.
+## Non-negotiable readiness before tailoring
 
-## 3. Global writing rules
+Before composing or substantively revising a CV, cover letter or baseline, read [readiness.md](references/readiness.md). Establish coverage of career history, experience and outcomes, evidenced strengths, career direction, preferences/constraints, and claim boundaries. Ask focused follow-ups for material gaps. Confirm unclear names, dates, numbers and ownership. Do not require a numerical result for every achievement or a fixed number of stories unrelated to the person's career stage.
 
-* No em dashes and no en dashes, anywhere. Use commas, colons, parentheses or a hyphen.
-* Short sentences. One idea per sentence.
-* English variant from the market in `profile.yaml` (british or american).
-* First person in the CV summary and the cover letter. Never "Sam owns" or "Owns".
-* Every claim traceable to `master_cv.md` or `profile/knowledge/`. Storytelling is allowed, fabrication is not. Check `preferences.md` sections Experience Claims, Fabrication Traps, Title Rules and Naming Rules before writing.
-* `master_cv.md` is read only. Never edit it unless the user explicitly asks. New facts go to `profile/knowledge/<topic>.md`, after asking.
-* Run `check_style.py` on every `resume.md` and `cover_letter.md` you write, and fix findings before reporting.
+**Refuse to tailor while material background is missing.** Name the missing information, explain why it affects accuracy, and continue discovery. Do not produce a speculative draft as a workaround. Example: "I don't have enough background to tailor this accurately yet. I know your responsibilities, but not your personal contribution, the outcomes, or what you want next. Let's fill those gaps first."
 
-## 4. New application
+Use `check_profile.py` for the profile and `check_readiness.py --application "<folder>"` immediately before application drafting. A zero exit code checks recorded evidence and decisions; the agent must also judge whether those sources actually support the proposed claims. Never fill readiness fields simply to make a check pass. An unknown is not a confirmed lack of experience. A known gap or weak job fit can still lead to an honest application once the user understands it and chooses to proceed.
 
-**Phase 0, Intake.** Get the JD: fetch the URL, take the pasted text, or read the file. Identify company, role, location. Pick the market by matching location against `profile.yaml markets[]`; ask if unclear. Run:
+## Learning is part of every tailoring session
+
+Read [learning.md](references/learning.md) before handling feedback. At the start, load preferences, knowledge and learnings applicable to the current role/market. During every drafting or revision session, classify corrections and new information as global, role/market-scoped, application-only or unresolved. Persist confirmed reusable information during the conversation, not just at the end.
+
+When scope is ambiguous, ask whether it should be remembered for future applications or kept here; keep it local and pending until answered. Explicit "always", "never", "for UK roles" or "this application only" already establishes scope. Do not request the same confirmation again. Durable preferences and concise fact/correction records live in `preferences.md`; detailed evidence lives in `knowledge/`. Application-only and pending information live in that application's `learning.json` and must never silently become global.
+
+Use `record_learning.py` to record and read scoped entries. A factual correction takes precedence over outdated evidence; do not reuse the false claim in another application. The master remains protected: update it only when the user explicitly asks. Remembering a fact does not require including it in every CV. Before handing off, reconcile new feedback, verify saved records, and report what was remembered, kept local or still pending. If nothing reusable emerged, say so briefly without creating filler records.
+
+## Writing rules
+
+- Every candidate claim must trace to the master, confirmed knowledge, or confirmed evidence captured for this application. A JD or fictional example is never candidate evidence.
+- Apply current confirmed corrections before older master wording. Check Experience Claims, Title Rules, Naming Rules, Framing Rules and Fabrication Traps in preferences.
+- First person in the CV summary and cover letter. Short sentences, no filler, market-appropriate English. No em or en dashes by default.
+- Match JD language only where the evidence supports it. Never imply a tool, qualification or ownership level just to include a keyword.
+- Use verified qualitative outcomes when numbers are unavailable. Do not manufacture precision or turn team results into personal ownership.
+- Run `check_style.py` on every `resume.md` and `cover_letter.md` written and fix findings.
+
+## Application workflow
+
+**1. Intake and discovery.** Accept a JD even if discovery is incomplete. Run `new_application.py --company "X" --role "Y" --market CODE --url "U" --location "L"` to preserve it. Fill `job_description.md` with extracted requirements, company context from public sources, and the raw JD. Resolve only missing material background. Draft no application content yet.
+
+**2. Fit assessment.** Read the career evidence, preferences, application learnings and [roast_rubric.md](references/roast_rubric.md). Assess both employer fit and whether the role serves the person's goals. Separate supported experience, transferable evidence, confirmed gaps and unknowns. Resolve material unknowns before a definitive recommendation; mark any interim assessment provisional. Write `roast.md` and the application `readiness.yaml`; update metadata with archetype, fit score and `status: roasted`.
+
+**3. Decision.** Present the archetype, fit, strongest alignment, main gap, goals fit and recommendation. Wait for the user's decision. Record `tailoring_approved: true` only when they choose to proceed based on that assessment; existing explicit approval need not be requested again. If declined, save `status: declined` and stop drafting.
+
+**4. Tailor.** Run:
+
+```text
+python "<skill_dir>/scripts/check_profile.py"
+python "<skill_dir>/scripts/check_readiness.py" --application "<folder>"
 ```
-python "<skill_dir>/scripts/new_application.py" --company "X" --role "Y" --market CODE --url "U" --location "L"
-```
-Fill `job_description.md`: company notes (public sources), extracted requirements (numbered, in the JD's words, must-haves first), nice-to-haves, raw JD.
 
-**Phase 1, Fit analysis.** Read `job_description.md`, `master_cv.md`, `archetypes.yaml`, `preferences.md`, `knowledge/`, and `references/roast_rubric.md`. Write `roast.md` using the folder's template. Update `metadata.json` (`archetype`, `fit_score`, `status: roasted`).
+Both must pass before writing. Apply [tailoring_playbook.md](references/tailoring_playbook.md) and [resume_format.md](references/resume_format.md). Process feedback through the learning workflow, update evidence/readiness where relevant, and rerun the gate after material changes. Then:
 
-**GATE 1.** Present the roast summary: archetype, score, top alignment, top gap, recommendation. Stop. Do not tailor until the user approves. If they choose not to apply, set `status: declined` and stop.
-
-**Phase 2, Tailor.** Apply `references/tailoring_playbook.md` steps 0 to 6 to produce `resume.md` in the format of `references/resume_format.md` (frontmatter: company, position, market, target_title). Then:
-```
+```text
 python "<skill_dir>/scripts/check_style.py" "<folder>/resume.md"
-python "<skill_dir>/scripts/render_cv.py" --resume "<folder>/resume.md"
-```
-Exit code 2 means the CV exceeds the market page limit: do another brevity pass and re-render. Repeat until it fits. If new facts came up in conversation, offer to save them to `knowledge/`.
-
-**Phase 3, Cover letter.** Write `cover_letter.md` per `references/cover_letter_rules.md`: requirement, marker, one sentence of evidence, first person. Run `check_style.py` on it.
-
-**Phase 4, Render and report.**
-```
-python "<skill_dir>/scripts/render_cv.py" --resume "<folder>/resume.md" --cover-letter
-```
-Set `status: drafted` in `metadata.json`. Report (section 7). Then ask whether to mark `status: submitted` once they have applied.
-
-## 5. Interview prep
-
-`prep <stage> <folder>` copies the matching template from `templates/interview/` into the folder as `<stage>_<YYYY-MM-DD>.md` and fills it from `job_description.md`, `roast.md`, `resume.md`, `cover_letter.md`, `knowledge/` and earlier debriefs, following `references/interview_prep_method.md`. Research on named interviewers uses public sources only and needs the user's go-ahead. Append a `stage_log` entry to `metadata.json`.
-
-## 6. Re-render after edits
-
-The DOCX defines the layout. The PDF is exported from it, so the two always match.
-
-**The user edited `resume.md`** (the normal path): rebuild both.
-```
-python "<skill_dir>/scripts/render_cv.py" --resume "<folder>/resume.md" --cover-letter
+python "<skill_dir>/scripts/render_cv.py" --resume "<folder>/resume.md" --tailoring
 ```
 
-**The user edited the DOCX by hand** in Word or Google Docs: export the PDF from that DOCX and leave the markdown alone.
-```
-python "<skill_dir>/scripts/render_cv.py" --resume "<folder>/resume.md" --from-docx --cover-letter
-```
-After `--from-docx`, `metadata.json` records that the DOCX is the source of truth. Tell the user plainly that `resume.md` no longer matches the document, so a later rebuild from markdown would discard their hand edits. Offer to fold the edits back into `resume.md` so the two agree again. Never rebuild from markdown over a hand-edited DOCX without saying so first.
+Exit 2 means page overflow: shorten and render again. Exit 3 means readiness blocked: resolve the reported gaps before continuing. `--tailoring` validates the application gate before creating output; it is mandatory for new or substantively revised applications.
 
-`--dry-run` shows the parsed structure. `--html-pdf` is an escape hatch for a machine with no converter; its PDF will not match the DOCX, so mention that whenever it is used.
+**5. Cover letter and review.** Follow [cover_letter_rules.md](references/cover_letter_rules.md), lint, and render with `--tailoring --cover-letter`. Review user corrections, persist their intended scope and rerun affected checks. Set `status: drafted` only once required outputs succeed. Record `submitted` only when the user says they applied.
 
-## 7. Final report format
+## Re-rendering and interview prep
 
-End every application or render turn with:
-* Absolute paths, one per line: `roast.md`, `resume.md`, `cover_letter.md`, the CV PDF, the CV DOCX, the cover letter PDF and DOCX when produced.
-* `PAGES: n (limit m)` from the render output, and which engine produced the PDF.
-* One line saying the DOCX is the editable copy and the PDF is exported from it, so hand edits to the DOCX can be picked up with `--from-docx`.
-* `check_style.py` result.
-* Any facts you offered to save to `knowledge/` and whether the user accepted.
+Rendering unchanged or user-edited source material does not perform tailoring. Use `render_cv.py --resume "<folder>/resume.md" --cover-letter` for formatting only. If the user hand-edited the DOCX, use `--from-docx --cover-letter`; explain that the Markdown may be stale and rebuilding from it would discard those edits. Never silently rebuild over hand edits. `--dry-run` inspects the parser. `--html-pdf` produces a PDF whose layout may differ from the DOCX; disclose that fallback.
 
-## 8. Scripts
+For `prep <stage> <folder>`, read [interview_prep_method.md](references/interview_prep_method.md). Stages: recruiter, hiring_manager, panel, final, reference, offer, debrief. Use the matching template and the existing application evidence, goals, preferences and earlier debriefs. Ask about missing evidence relevant to that stage. Apply the same learning rules to new career facts and corrections. Named-interviewer research requires the user's go-ahead and public sources only. Append the stage to metadata.
 
-| Script | Invocation | Purpose |
-|---|---|---|
-| paths.py | `python "<skill_dir>/scripts/paths.py"` | Print data dir and profile status |
-| init_profile.py | `... init_profile.py [--data-dir D] [--force]` | Scaffold profile from templates |
-| check_profile.py | `... check_profile.py [--data-dir D]` | Validate profile files, tags, placeholders |
-| import_cv.py | `... import_cv.py <file> [--out text.md]` | Extract text from .docx/.pdf/.md |
-| new_application.py | `... new_application.py --company X --role Y [--market C] [--url U] [--location L]` | Create application folder |
-| check_style.py | `... check_style.py <file.md> [...]` | Lint dashes, placeholders, banned phrases, third person |
-| render_cv.py | `... render_cv.py --resume <folder>/resume.md [--cover-letter] [--from-docx] [--dry-run]` | Build the DOCX, export the PDF from it, report pages |
-| render_pdf.py | `python "<skill_dir>/scripts/render_pdf.py"` | Print which PDF engines this machine has |
+## Reporting and helpers
 
-All scripts accept `--data-dir` (or `--profile-dir` for render and checks) to override the data location. Dependencies: Python 3.9+, `pip install -r "<skill_dir>/requirements.txt"`, and a DOCX to PDF converter: Microsoft Word (used through pywin32 on Windows) or LibreOffice. If a render reports `pdf_error`, read the `pdf_help` line back to the user; the DOCX is still written either way.
+When documents were produced, link their absolute paths alongside the roast and Markdown sources, report actual page count/limit and PDF engine, style result, and any failed outputs. Explain that DOCX is editable and `--from-docx` picks up hand edits. Do not invent output paths, page counts or successful renders for discovery/blocked turns. Always close a tailoring/revision turn with the learning outcome.
 
-## 9. Reference files
+| Script | Use |
+|---|---|
+| `paths.py` | Resolve data directory and profile status |
+| `init_profile.py [--data-dir D]` | Create a new profile; refuse accidental replacement |
+| `check_profile.py [--profile-dir P]` | Validate structure and substantive background coverage |
+| `check_readiness.py [--application F] [--fingerprints]` | Validate profile/application readiness or print current source fingerprints |
+| `record_learning.py record --entry FILE --application F` | Save confirmed scoped learning or local pending feedback |
+| `record_learning.py show --application F --archetype TAG --market CODE` | Read matching durable and local learnings, with pending items separate |
+| `import_cv.py FILE` | Extract a source CV for review |
+| `new_application.py --company X --role Y` | Scaffold an intake, including readiness and local learning records |
+| `check_style.py FILE ...` | Lint generated documents |
+| `render_cv.py --resume FILE [--tailoring] [--cover-letter]` | Generate DOCX/PDF; tailoring mode enforces readiness |
+| `render_pdf.py` | Report available PDF converters |
 
-`references/onboarding_questions.md`, `preferences_schema.md`, `tailoring_playbook.md`, `roast_rubric.md`, `cover_letter_rules.md`, `resume_format.md`, `render_config.md`, `interview_prep_method.md`. A complete fictional example lives in `examples/` (profile and one application) and shows what finished files look like.
+Helpers needing profile data support `--data-dir` or `--profile-dir` as shown in `--help`. DOCX/PDF generation uses the existing Python dependencies and Word/LibreOffice support. Report `pdf_error` and `pdf_help` honestly if conversion is unavailable. [render_config.md](references/render_config.md) documents layout settings; [preferences_schema.md](references/preferences_schema.md) documents narrative and goal preferences. The bundled fictional example is illustrative, never the user's background.

@@ -13,7 +13,7 @@ target_title: "{{ROLE}}"
 
 # PROFILE
 
-First paragraph. Open with the lead differentiator and echo the top two or three JD requirements. Bold the keywords.
+First paragraph. Open with the evidenced lead differentiator and relevant supported JD requirements. Use only confirmed candidate claims.
 
 Second paragraph. Expertise and how you work.
 
@@ -33,10 +33,8 @@ Third paragraph, optional. Working style and what you bring to the team.
 
 # ACHIEVEMENTS
 
-* **Thing**: result with a number.
-* **Thing**: result with a number.
-* **Thing**: result with a number.
-* **Thing**: result with a number.
+<!-- Use as many relevant achievements as the evidence supports. No number or bullet quota. -->
+* **Thing**: verified quantitative or qualitative outcome.
 
 ---
 

@@ -2,6 +2,22 @@
 
 What each heading means and what a good entry looks like, using a fictional product manager, Sam Okafor, as the example.
 
+## Career Direction and Hopes
+
+Desired positions, seniority and actual scope; IC/management preference; motivation for a move; hopes, growth and the work to do more or less of. Do not turn aspirations into experience claims.
+> I want a senior IC role with ownership of a data product and direct customer discovery. I want to deepen technical product work before taking on line management. A title increase matters less than real decision authority.
+
+## Working Preferences and Tradeoffs
+
+Preferred work, environment and values; priorities, acceptable compromises, dealbreakers and relevant constraints. Record explicit uncertainty or a decision not to share optional details, rather than treating blanks as agreement.
+> I prefer a small, collaborative team with access to customers. I would trade title for a clear product mandate. I am open to hybrid work but not weekly international travel. Compensation details are private for now.
+
+## Learning Scope and Confirmed Learnings
+
+Follow [learning.md](learning.md). Use global, archetype, market, application or pending scope. The helper's managed JSON block in Confirmed Learnings is part of this file; preserve it when editing prose. Durable entries contain the source, confirmation, date, scope and any superseded IDs. Longer facts/corrections link to knowledge files. Local or unresolved items belong only in the application's learning.json.
+
+Read matching active entries at the start of each application and after feedback. A confirmed correction overrides outdated master wording. Do not discard old facts or silently broaden a scoped preference. Save confirmed reusable changes during the conversation and report the learning outcome at handoff.
+
 ## Lead Differentiator
 The one thing few candidates can truthfully claim. It opens the CV summary and anchors the pitch.
 > Shipped a regulated clinical data product to production in three NHS trusts, not a pilot. Open every summary with production delivery in a regulated setting.
@@ -36,7 +52,7 @@ Plausible-sounding claims that are false. Exact phrases in backticks; the linter
 
 ## Bullet Style
 Defaults offered at onboarding:
-> One concept per bullet, at most two lines, no filler. Lead achievements with the thing, then the number. Enforce hardest on the current role.
+> One concept per bullet, at most two lines, no filler. Lead achievements with the thing, then the verified outcome. Numbers are useful when supported, not compulsory. Enforce hardest on the current role.
 
 ## Summary Format
 > Three short paragraphs, first person, no "I am a". Bold the top three or four JD keywords.

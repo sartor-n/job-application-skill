@@ -28,7 +28,7 @@ Second paragraph.
 
 # ACHIEVEMENTS
 
-* **Thing**: result with a number.
+* **Thing**: verified quantitative or qualitative outcome.
 
 # WORK EXPERIENCE
 

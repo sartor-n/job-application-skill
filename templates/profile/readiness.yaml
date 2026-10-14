@@ -1,0 +1,29 @@
+schema_version: 2
+reviewed_at: null
+# Populate from the user's evidence. Never mark ready merely to pass a check.
+areas:
+  career_history:
+    status: missing
+    summary: ""
+    evidence: []
+  experience_and_outcomes:
+    status: missing
+    summary: ""
+    evidence: []
+  strengths:
+    status: missing
+    summary: ""
+    evidence: []
+  career_direction:
+    status: missing
+    summary: ""
+    evidence: []
+  preferences_and_constraints:
+    status: missing
+    summary: ""
+    evidence: []
+  claim_boundaries:
+    status: missing
+    summary: ""
+    evidence: []
+blocking_questions: []

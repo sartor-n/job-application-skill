@@ -6,7 +6,7 @@ The cover letter is a requirement-to-evidence map, not a letter.
 2. **First person**: "I own the pricing roadmap", never "Sam owns" or "Owns". The same rule applies to the CV summary.
 3. **One sentence per requirement, maximum.** Two to three lines is fine if the sentence earns it.
 4. **Evidence, not claims**: name the product, company, number or concrete situation that proves the requirement. "Owns the analytics roadmap at Larkspur, prioritised against demand from four squads" beats "manages roadmaps".
-5. **Thin evidence**: where the proof is weak, at least tie the point to the target company's own context rather than padding.
+5. **Thin evidence**: ask about unknown material background before drafting. Identify transferable evidence and its limits accurately; omit unsupported claims or state a genuine gap. Company context cannot substitute for candidate evidence. The same readiness and learning gates apply as for the CV.
 6. **Marker**: each requirement is followed by the marker from `profile.yaml style.checkmark` (default a plain check mark; empty string means none). Keep it a plain text glyph, not a colour emoji, which would inflate the PDF past most portals' upload limits.
 7. **Order**: follow the JD's own order of importance, must-haves first.
 8. **Format**:

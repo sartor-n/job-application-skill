@@ -28,7 +28,7 @@ The master is a floor, not a ceiling. Tailoring reshapes this content to a job d
 # EXPERTISE
 
 ### [IC] Expertise
-<!-- 5 bullets. "**Area**: one sentence of what you actually do in it." -->
+<!-- Evidence-backed areas: "**Area**: one sentence of what you actually do in it." No fixed quota. -->
 * **{{AREA}}**: {{ONE_SENTENCE}}
 
 ### [LEAD] Expertise
@@ -42,14 +42,14 @@ The master is a floor, not a ceiling. Tailoring reshapes this content to a job d
 # ACHIEVEMENTS
 
 ### [IC] Achievements
-<!-- 4 bullets. Lead with the product or thing, then the result with a number. -->
-* **{{THING}}**: {{RESULT_WITH_NUMBER}}
+<!-- Relevant achievements. Lead with the thing, then a verified quantitative or qualitative outcome. -->
+* **{{THING}}**: {{VERIFIED_OUTCOME}}
 
 ### [LEAD] Achievements
-* **{{THING}}**: {{RESULT_WITH_NUMBER}}
+* **{{THING}}**: {{VERIFIED_OUTCOME}}
 
 ### [HYBRID] Achievements
-* **{{THING}}**: {{RESULT_WITH_NUMBER}}
+* **{{THING}}**: {{VERIFIED_OUTCOME}}
 
 ---
 

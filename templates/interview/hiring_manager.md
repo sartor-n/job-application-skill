@@ -30,7 +30,7 @@
 ### G. Close: "What have you not seen in me yet that you need to see?"
 
 ## 6. Likely questions from them and your answers
-<!-- Use STAR shape but keep each answer to 90 seconds. Situation, what you did, result with a number, what you learned. -->
+<!-- Use STAR shape: situation, your actual contribution, verified qualitative/quantitative outcome, and what you learned. Keep examples concise when spoken. -->
 *
 
 ## 7. Salary

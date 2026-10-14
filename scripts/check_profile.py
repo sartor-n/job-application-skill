@@ -1,116 +1,125 @@
-"""Validate the profile directory. Exit 1 on errors, 0 on success (warnings allowed).
+"""Validate profile structure AND substantive background coverage.
 
-Usage: python check_profile.py [--data-dir D | --profile-dir P]
+Exit 1 on errors. A completed flag cannot bypass missing evidence. Optional contact
+fields may be blank. Use --data-dir or --profile-dir to keep the chosen storage root.
 """
 import argparse
-import os
 import re
 import sys
+from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(__file__))
-from paths import load_profile, load_yaml  # noqa: E402
-
-if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+from paths import load_yaml, profile_dir
+from check_readiness import background_errors, substantive
 
 TAG_RE = re.compile(r"\[([A-Z][A-Z0-9_]*(?:\s*,\s*[A-Z][A-Z0-9_]*)*)\]")
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--data-dir")
-    ap.add_argument("--profile-dir")
-    args = ap.parse_args()
-
+def validate_profile(pdir):
+    root = Path(pdir)
     errors, warnings = [], []
-    profile, pdir = load_profile(args.profile_dir, args.data_dir)
-    if profile is None:
-        print("ERROR: profile.yaml not found in " + pdir)
-        return 1
-
-    for key in ("identity", "contact", "markets", "style", "render"):
-        if key not in profile:
-            errors.append("profile.yaml: missing top-level key '" + key + "'")
-    ident = profile.get("identity") or {}
-    if not ident.get("name") or "{{" in str(ident.get("name")):
-        errors.append("profile.yaml: identity.name is empty or still a placeholder")
-    contact = profile.get("contact") or {}
-    if not contact.get("email") or "{{" in str(contact.get("email")):
-        errors.append("profile.yaml: contact.email is empty or still a placeholder")
-    markets = profile.get("markets") or []
-    if not markets:
+    try:
+        profile = load_yaml(root / "profile.yaml")
+    except (OSError, ValueError) as exc:
+        return [str(exc)], warnings
+    if profile.get("schema_version") != 2:
+        errors.append("schema 2 coverage review required; preserve existing data and follow references/readiness.md")
+    for key in ("identity", "contact", "style", "render"):
+        if not isinstance(profile.get(key), dict):
+            errors.append("profile.yaml: " + key + " must be a mapping")
+    ident = profile.get("identity") if isinstance(profile.get("identity"), dict) else {}
+    if not substantive(ident.get("name")):
+        errors.append("profile.yaml: identity.name is empty or a placeholder")
+    contact = profile.get("contact") if isinstance(profile.get("contact"), dict) else {}
+    if "{{" in str(contact.get("email", "")):
+        errors.append("profile.yaml: replace the email placeholder or leave it empty by choice")
+    elif not contact.get("email"):
+        warnings.append("contact.email is empty; confirm the intended contact details before submitting")
+    markets = profile.get("markets")
+    if not isinstance(markets, list) or not markets:
         errors.append("profile.yaml: at least one market is required")
-    for m in markets:
-        code = m.get("code", "?")
-        if not isinstance(m.get("page_limit"), int):
-            errors.append("profile.yaml: market " + str(code) + " needs an integer page_limit")
-        if m.get("english") not in (None, "british", "american"):
-            warnings.append("profile.yaml: market " + str(code) + " english should be british or american")
-    pattern = (profile.get("render") or {}).get("filename_pattern", "")
-    if pattern and "{doc}" not in pattern:
-        errors.append("profile.yaml: render.filename_pattern must contain {doc}")
+        markets = []
+    for market in markets:
+        if not isinstance(market, dict):
+            errors.append("each market must be a mapping")
+            continue
+        limit = market.get("page_limit")
+        if type(limit) is not int or limit <= 0:
+            errors.append("market page_limit must be a positive integer")
+        if not substantive(market.get("code")):
+            errors.append("each market needs a code")
+        if market.get("english") not in (None, "british", "american"):
+            warnings.append("market English variant should be british or american")
+    render = profile.get("render") if isinstance(profile.get("render"), dict) else {}
+    if render.get("filename_pattern") and "{doc}" not in str(render["filename_pattern"]):
+        errors.append("render.filename_pattern must contain {doc}")
 
-    # archetypes
     tags = {"ALL"}
-    apath = os.path.join(pdir, "archetypes.yaml")
-    if os.path.exists(apath):
-        arch = load_yaml(apath).get("archetypes") or []
-        if not arch:
-            errors.append("archetypes.yaml: no archetypes defined")
-        for a in arch:
-            tag = str(a.get("tag", "")).strip()
-            if not re.fullmatch(r"[A-Z][A-Z0-9_]*", tag):
-                errors.append("archetypes.yaml: tag '" + tag + "' must be UPPER_CASE letters, digits or underscores")
+    try:
+        archetypes = load_yaml(root / "archetypes.yaml").get("archetypes")
+        if not isinstance(archetypes, list) or not archetypes:
+            errors.append("archetypes.yaml: choose at least one evidenced candidate positioning")
+            archetypes = []
+        for item in archetypes:
+            if not isinstance(item, dict):
+                errors.append("each archetype must be a mapping")
+                continue
+            tag = str(item.get("tag", ""))
+            if not re.fullmatch(r"[A-Z][A-Z0-9_]*", tag) or tag in tags:
+                errors.append("archetype tags must be unique UPPER_CASE tags; ALL is reserved")
             tags.add(tag)
-            if "{{" in str(a.get("target_titles", "")):
-                warnings.append("archetypes.yaml: " + tag + " target_titles still contain placeholders")
-    else:
-        errors.append("archetypes.yaml missing")
+            titles = item.get("target_titles")
+            if not isinstance(titles, list) or not titles or not all(substantive(title) for title in titles):
+                errors.append("archetype " + tag + ": confirm target titles without placeholders")
+    except (OSError, ValueError) as exc:
+        errors.append(str(exc))
 
-    # master cv
-    mpath = os.path.join(pdir, "master_cv.md")
-    if os.path.exists(mpath):
-        with open(mpath, "r", encoding="utf-8") as f:
-            master = f.read()
-        if not re.search(r"^read_only:\s*true", master, flags=re.M):
-            errors.append("master_cv.md: frontmatter must contain 'read_only: true'")
-        placeholders = re.findall(r"\{\{[^}]+\}\}", master)
-        if placeholders:
-            errors.append("master_cv.md: " + str(len(placeholders)) + " placeholders left, e.g. " + placeholders[0])
-        used = set()
-        for m in TAG_RE.finditer(master):
-            for t in m.group(1).split(","):
-                used.add(t.strip())
-        unknown = sorted(t for t in used if t not in tags)
-        if unknown:
-            errors.append("master_cv.md: tags not defined in archetypes.yaml: " + ", ".join(unknown))
-        for t in sorted(tags - {"ALL"}):
-            if t not in used:
-                warnings.append("master_cv.md: archetype " + t + " has no tagged content")
-        if "# WORK EXPERIENCE" not in master.upper() and "# EXPERIENCE" not in master.upper():
-            warnings.append("master_cv.md: no WORK EXPERIENCE section found")
-    else:
-        errors.append("master_cv.md missing")
+    try:
+        master = (root / "master_cv.md").read_text(encoding="utf-8")
+        if not re.search(r"\A---\s*\n.*?^read_only:\s*true\s*$.*?^---\s*$", master, re.M | re.S):
+            errors.append("master_cv.md: frontmatter must contain read_only: true")
+        if "{{" in master:
+            errors.append("master_cv.md: unfinished placeholders remain")
+        used = {tag.strip() for match in TAG_RE.finditer(master) for tag in match.group(1).split(",")}
+        if used - tags:
+            errors.append("master_cv.md: unknown archetype tags: " + ", ".join(sorted(used - tags)))
+        for tag in sorted(tags - used - {"ALL"}):
+            warnings.append("master_cv.md: no content explicitly tagged " + tag + "; check transferable/ALL evidence")
+        sections = re.findall(
+            r"^#\s+(?:WORK EXPERIENCE|EXPERIENCE|PROJECTS|EDUCATION|VOLUNTEERING)[^\n]*\n(.*?)(?=^#\s|\Z)",
+            master, re.I | re.M | re.S)
+        def has_content(section):
+            clean = re.sub(r"<!--.*?-->", "", section, flags=re.S)
+            return any(substantive(line.strip(" *-")) for line in clean.splitlines()
+                       if not line.lstrip().startswith(("#", "[")))
+        if not any(has_content(section) for section in sections):
+            errors.append("master_cv.md: add actual career, project, study or volunteering evidence")
+    except (OSError, UnicodeError) as exc:
+        errors.append(str(exc))
+    try:
+        prefs = (root / "preferences.md").read_text(encoding="utf-8")
+        if "{{" in prefs:
+            errors.append("preferences.md: resolve placeholders or explicitly mark optional questions declined")
+    except (OSError, UnicodeError) as exc:
+        errors.append(str(exc))
+    errors.extend(background_errors(root))
+    return errors, warnings
 
-    ppath = os.path.join(pdir, "preferences.md")
-    if os.path.exists(ppath):
-        with open(ppath, "r", encoding="utf-8") as f:
-            prefs = f.read()
-        left = re.findall(r"\{\{[^}]+\}\}", prefs)
-        if left:
-            warnings.append("preferences.md: " + str(len(left)) + " placeholders left, e.g. " + left[0])
-    else:
-        errors.append("preferences.md missing")
 
-    for w in warnings:
-        print("WARN: " + w)
-    for e in errors:
-        print("ERROR: " + e)
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data-dir")
+    parser.add_argument("--profile-dir")
+    args = parser.parse_args()
+    pdir = profile_dir(args.data_dir, args.profile_dir)
+    errors, warnings = validate_profile(pdir)
+    for message in warnings:
+        print("WARN: " + message)
+    for message in errors:
+        print("ERROR: " + message)
     if errors:
         print("FAIL: " + str(len(errors)) + " error(s) in " + pdir)
         return 1
-    print("OK: profile valid in " + pdir + " (" + str(len(warnings)) + " warning(s))")
-    print("onboarding_complete: " + str(profile.get("onboarding_complete", False)))
+    print("OK: profile structure and recorded background validated in " + pdir)
     return 0
 
 

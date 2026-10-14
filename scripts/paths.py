@@ -40,19 +40,20 @@ def applications_dir(data=None):
 
 
 def load_yaml(path):
-    """Load YAML with pyyaml if present, else a tiny fallback for flat key: value files."""
+    """Read complete structured YAML. Never silently drop nested profile information."""
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
     try:
         import yaml  # type: ignore
-        return yaml.safe_load(text) or {}
     except ImportError:
-        out = {}
-        for line in text.splitlines():
-            if ":" in line and not line.startswith(" ") and not line.startswith("#"):
-                k, v = line.split(":", 1)
-                out[k.strip()] = v.strip().strip('"').strip("'")
-        return out
+        raise SystemExit("ERROR: PyYAML is required. Use this Python interpreter to install requirements.txt before continuing.")
+    try:
+        value = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        raise ValueError(str(path) + ": invalid YAML: " + str(exc)) from exc
+    if not isinstance(value, dict):
+        raise ValueError(str(path) + " must contain a YAML mapping")
+    return value
 
 
 def load_profile(profile=None, data=None):

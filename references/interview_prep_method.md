@@ -19,8 +19,8 @@ Each stage gets one prep sheet from `templates/interview/`, filled from `job_des
 
 ## Building the sheet
 1. Fill the header (who, when, format).
-2. Write the pitch first. It reuses the CV summary's lead differentiator and two proof points with numbers.
-3. Map the JD's must-haves to one example each. Use a short STAR shape: situation, what you did, result with a number, one line on what you learned. Keep each to 90 seconds when spoken.
+2. Write the pitch first. Use the CV's lead differentiator and relevant verified proof points. Numbers are useful when known; a specific qualitative outcome is valid.
+3. Map the JD's must-haves to evidence or an honest confirmed gap. Use a short STAR shape: situation, what you did, verified result, and what you learned. Ask about material unknowns rather than inventing a story. Keep each example concise when spoken.
 4. Draft the user's questions grouped by theme. Mark which decision each group informs (is the mandate real, is the bet conviction or narrative, how are decisions made, where does this role sit).
 5. List the do-nots specific to this room.
 6. Note salary facts: the band, the target, the walk-away. Never reopen a band already agreed.
@@ -29,4 +29,4 @@ Each stage gets one prep sheet from `templates/interview/`, filled from `job_des
 Read the expanded answers the night before, never in the room. In the room, use only the skim sections (pitch, topic directions, question list).
 
 ## After
-Fill `debrief.md` within an hour. Offer to save new facts about the user's own experience to `knowledge/`. Append a `stage_log` entry to `metadata.json` (stage, date, interviewer roles, outcome when known).
+Fill debrief.md while the discussion is fresh. Process new career facts, corrections and preferences through [learning.md](learning.md): persist confirmed reusable information and keep one-off or unresolved scope local. Append a stage_log entry to metadata.json (stage, date, interviewer roles, outcome when known).

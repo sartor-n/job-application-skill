@@ -1,0 +1,10 @@
+schema_version: 2
+reviewed_at: null
+profile_fingerprint: ""
+job_fingerprint: ""
+goals_fit:
+  status: unknown
+  summary: ""
+# List all material extracted requirements and their evidence, known gaps or unknowns.
+requirements: []
+blocking_questions: []

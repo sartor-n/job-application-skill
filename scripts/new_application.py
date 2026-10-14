@@ -6,6 +6,7 @@ Creates <data>/applications/YYYY-MM-DD_company_role/ with job_description.md, ro
 cover_letter.md, resume.md (skeleton) and metadata.json. Prints FOLDER: <path>.
 """
 import argparse
+import json
 import os
 import re
 import sys
@@ -65,10 +66,18 @@ def main():
         "cover_letter.md": "cover_letter.md",
         "resume_skeleton.md": "resume.md",
         "metadata.json": "metadata.json",
+        "readiness.yaml": "readiness.yaml",
+        "learning.json": "learning.json",
     }
     for tpl, out in mapping.items():
         with open(os.path.join(src, tpl), "r", encoding="utf-8") as f:
-            text = fill(f.read(), values)
+            template = f.read()
+        if tpl == "metadata.json":
+            metadata = json.loads(template)
+            text = json.dumps({key: fill(value, values) if isinstance(value, str) else value
+                               for key, value in metadata.items()}, indent=2, ensure_ascii=False) + "\n"
+        else:
+            text = fill(template, values)
         with open(os.path.join(folder, out), "w", encoding="utf-8") as f:
             f.write(text)
         print("WROTE: " + os.path.join(folder, out))

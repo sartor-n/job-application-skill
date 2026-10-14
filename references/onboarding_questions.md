@@ -1,94 +1,79 @@
-# Onboarding Question Script
+# Career discovery and onboarding
 
-Run this when `profile.yaml` is missing or has `onboarding_complete: false`. Ask one group at a time. Write the files after each group, so a dropped session loses little. Offer defaults and accept short answers. Expect voice-to-text noise: confirm names, URLs and numbers back to the user before writing them.
+Aim for sufficient understanding to write truthfully and help the person move toward the work they want. Use the groups as coverage, not a rigid questionnaire. Ask one substantial question or a small related group, listen, summarise, and follow what is missing. Do not dump every question below at once. Offer to pause and resume; save confirmed answers and open questions after each group.
 
-Tone: a careful colleague setting up a shared system, not a form. Explain in one line why each group matters.
+## First-use orientation
 
-## G1. Storage
+Before intake, explain the journey in plain language. Example:
 
-1. "Your CV data will live outside the skill folder so the skill can be updated freely. Default location is `~/job-applications/`. Keep the default, or give me a path?" Also mention the `JOB_APPLICATIONS_DIR` environment variable for people who want the data inside a notes repo.
-2. Run `init_profile.py [--data-dir D]`. Report the paths it printed.
+> First, we'll build a picture of your career, strengths and what you want next. You can then paste a job description or share its link. I'll give you a candid fit assessment, including whether the role suits your goals. If you decide to proceed, we'll tailor the CV and cover letter, review them together and produce the documents. Along the way, I'll remember the corrections and preferences you want reused. I need enough background before tailoring; we'll fill important gaps rather than guess.
 
-## G2. Identity and contact
+Explain that discovery may take roughly 20 to 40 minutes with an existing CV, longer from scratch, and can span several sessions. A pasted JD can be saved at any point.
 
-Writes `profile.yaml: identity, contact`.
+Recommend voice input with visual language:
 
-1. Full name as it should appear on the CV.
-2. Default headline under the name (their current or target title), e.g. "Senior Product Manager".
-3. Email.
-4. LinkedIn URL. Portfolio or GitHub URL if they want it printed.
-5. Phone number, and whether it should be printed. Default: not printed. Explain that recruiters get it from the application form.
-6. A work-rights line, if useful in their target markets: "Right to work in the UK", "EU citizen", "Dual citizen". Empty is fine.
-7. Default location line, e.g. "Leeds, UK" or "Lisbon, Portugal (relocating to Berlin, March 2027)".
+> 🎙️ I recommend voice input for the career questions. If your chat has a microphone or voice button, use it to tell me the story naturally. Picture us talking through your career over coffee: take detours and don't worry about polished wording. I'll organise it and check unclear names, dates and numbers. Typing works too.
 
-## G3. Markets and relocation
+Do not claim a particular app has a control or give an unverified location or shortcut. In a terminal or a host without voice, suggest optional device dictation if available. Recommend voice again at the first substantial storytelling group if helpful, not on every question. Record `onboarding.process_explained: true` after explaining; resume rather than repeating the welcome on every turn.
 
-Writes `profile.yaml: markets[]` and `preferences.md ## Location and Relocation Facts`, `## Early Career Handling`.
+## G1. Storage and existing material
 
-1. "Which job markets will you apply in?" Take a list (countries or regions). Ask for a short code for each (UK, NL, US, AU).
-2. Per market: page limit (offer the norm: 2 pages in most of Europe and the US, 3 accepted in Australia), English variant (british or american), a location line override if it differs, whether to print the work-rights line.
-3. Relocation facts: where they are now, where they are going and when, and what must never be implied (e.g. "never imply I am already in the country").
-4. Early career: which early roles are kept only in long-format markets and dropped in short-format ones.
+Confirm the default `~/job-applications/` or use the path already accepted. Mention `JOB_APPLICATIONS_DIR` only if another location is useful. Run `init_profile.py` only for a new profile. Never run `--force` simply to resume or upgrade.
 
-## G4. Archetypes
+Invite an existing CV, career notes or portfolio when available. Read it to avoid re-asking known facts, but distinguish document claims from clarified ownership and current wishes. Confirm ambiguous names, dates, numbers and URLs before treating them as verified. Never infer career claims from an employer, title or sample profile.
 
-Writes `archetypes.yaml`.
+## G2. Direction, hopes and expected position
 
-1. Show the three starters (IC, LEAD, HYBRID) in two lines each. "Which of these versions of you do jobs call for? Rename them, drop one, or add one." Aim for two to four.
-2. Per archetype: tag (UPPER_CASE), name, two or three target titles, the JD signals that indicate it, what to emphasise, what to drop from the CV.
+Start with: "Picture a role you would be happy to be in two years from now. What are you doing more of, and what have you stopped doing?"
 
-## G5. Master CV
+Explore desired titles and seniority, actual scope, IC versus management or a mix, domain, company type/stage, why change now, long-term hopes and skills to develop. Separate "I have done this" from "I want to do this". Ask what attracts them to a specific role if a JD is already present.
 
-Writes `master_cv.md`. This is the longest group. Offer two routes.
+Capture priorities, acceptable tradeoffs and dealbreakers. "Still exploring" is a valid answer when accompanied by a useful direction or options to evaluate. Write confirmed goals and wishes to `preferences.md` under Career Direction and Hopes. Do not make a target title imply a historical title.
 
-**Route A, import**: "Do you have a current CV file (.docx, .pdf, .md)?" Run `import_cv.py <file>`, then restructure the text into the master template sections. Show the user each section as you build it and ask for the missing numbers. Tag content by archetype; ask when unsure.
+## G3. Career story, experience and evidence
 
-**Route B, interview**: build each section by asking:
-1. Profile: for each archetype, two or three short first-person paragraphs. Open with the lead differentiator (ask G6 question 1 early if needed).
-2. Expertise: five areas per archetype, each with one sentence of what they actually do.
-3. Achievements: four per archetype. "What is the thing, and what is the number?"
-4. Experience: for each role, `Role | Company`, dates as `MM/YYYY - MM/YYYY`, then bullets. Push for one concept per bullet, with a number. Tag bullets that only matter for one archetype.
-5. Education, projects, certifications.
+Start with: "Walk me through how you got to where you are today. Which moves mattered most, and why?"
 
-Always: every bullet must be something they can defend in an interview. Ask "what would you say if they asked you to prove that?" when a claim sounds inflated. Write the file with `read_only: true` in the frontmatter and explain the rule: the assistant never edits it without being asked.
+For relevant roles or projects establish title, organisation, dates, remit, actual authority, collaborators, decisions, challenges, actions and outcomes. Ask deeper about the most relevant recent work; summarise less relevant history. For someone early in their career, projects, study, volunteering or internships can provide evidence. Do not require paid employment.
 
-## G6. Narrative preferences
+Build a small, useful bank of stories. Probe: "What was the problem? What did you personally decide or deliver? Who else was involved? What changed? How do you know? What was difficult, and what did you learn?" Confirm ownership versus contribution and team versus personal results.
 
-Writes `preferences.md`. One question per heading; see `preferences_schema.md` for what good answers look like.
+Numbers are welcome when accurate and meaningful, never compulsory. Use a specific qualitative outcome when metrics are unavailable. Record uncertainty rather than inventing a date, percentage or scale. If a claim seems inflated, ask: "What would you say if they asked you to prove that?"
 
-1. Lead differentiator: "What is the one thing few candidates can truthfully claim that you can? Should the summary open with it?"
-2. Experience claims: "How many years of professional experience do you claim in total? Since when in your current discipline? Which phrasing would be a fabrication?"
-3. Title rules: "Any role whose title must never be upscaled? What exact title should we use?"
-4. Naming rules: "Any products or projects with a public name that must replace an internal one? Any spelling rules?"
-5. Themes: "Two or three themes that must appear in every version of your CV, at varying strength."
-6. Framing rules: "Topics where you want a specific framing and a framing to avoid?" Collect as pairs.
-7. Fabrication traps: "Claims that sound plausible for someone like you but are false." Exact phrases go in backticks so the linter can catch them.
-8. Banned phrases: words they never want to see.
-9. Bullet style and summary format: offer the defaults and let them edit.
+With a CV import, use `import_cv.py`, review extracted content section by section and ask only about missing context or evidence. The import alone cannot unlock tailoring. For a new master, organise confirmed material into profile, expertise, achievements, experience, education and relevant projects. Use `read_only: true` frontmatter. Once established, do not replace or rewrite the master without an explicit user request; store additions/corrections in `knowledge/` and index them in preferences.
+
+## G4. Strengths and preferred working life
+
+Ask: "What do colleagues reliably come to you for? Tell me about a time that strength made a difference." Seek evidence, not a list of adjectives. Explore work that energises or drains them, their best environment, autonomy, collaboration, leadership, pace, values and what they want to avoid repeating.
+
+Ask about practical constraints relevant to their search: locations, remote/hybrid preference, relocation, travel, timing and work authorisation. Compensation priorities may be useful; exact figures are optional. Respect declined/private information and record that boundary. Do not block drafting for an irrelevant undisclosed phone number, salary or personal detail.
+
+Write preferences to Working Preferences and Tradeoffs. Store supporting career stories in master/knowledge. Mark the distinction between ability and desire: being good at something does not mean wanting a job centred on it.
+
+## G5. Positioning and narrative
+
+Reflect back the strongest evidenced themes and propose one or more useful versions of the candidate. IC, LEAD and HYBRID are optional starters, not required identities or a quota. Confirm the useful positioning before populating `archetypes.yaml`; tag evidence only where supported.
+
+Use [preferences_schema.md](preferences_schema.md) to capture differentiator, accurate experience claims, exact titles and public names, preferred framing, false-but-plausible claims, banned phrases and tone. Ask only the unanswered questions. Keep historical facts and aspirations distinct. Explain that durable preferences can apply globally, to an archetype/market or to one application, and apply [learning.md](learning.md) whenever the scope is unclear.
+
+## G6. Identity, contact and markets
+
+Collect remaining administrative fields after understanding the career: printed name/headline, email, optional LinkedIn/portfolio, optional phone (default unprinted), location and any requested work-rights line. Confirm names, links and numbers in context without asking for the same confirmation twice. Do not collect a phone number if it has no purpose.
+
+Configure markets, English variant, location/work-rights display and page limits. Offer two pages as a starting preference, not a universal hiring rule; use the user's needs and career stage. Record relocation truthfully and avoid implying current residence elsewhere. Decide what early history can be compressed without changing facts.
 
 ## G7. Style and rendering
 
-Writes `profile.yaml: style, render`.
+Offer the existing typography, page size, filenames and section order as defaults. Ask about summary length, first-person voice, emphasis and cover-letter marker where it matters. No em/en dashes is a style default, not evidence that punctuation identifies machine writing. A plain check mark avoids possible font-embedding issues; do not claim every emoji creates a particular file size. Save changes to `profile.yaml` and corresponding preferences.
 
-1. English variant default (british or american).
-2. Dash rule: default forbids em and en dashes. Explain why in one line (they read as machine-written).
-3. Summary: number of paragraphs (default 3), bold keywords (default yes).
-4. Cover letter marker (default a plain check mark, can be empty). If they ask for a colour emoji, say that one emoji makes Word embed the whole emoji font and pushes the PDF past 3 MB, over many portals' upload caps.
-5. Default section order.
-6. Filename pattern (default `{name} - {company} - {position} {doc}`).
-7. Theme: accent colour, font, A4 or Letter. Offer to keep the defaults.
+## G8. Readiness and baseline
 
-## G8. Confirm
+Summarise career direction, evidence, strengths, priorities and claim boundaries in a short reflection; resolve substantive corrections. Populate `readiness.yaml` with coverage and actual source excerpts according to [readiness.md](readiness.md). Keep unanswered material questions visible. Do not mark an area ready just because a question was asked.
 
-1. Summarise what was captured in ten lines.
-2. Run `check_profile.py`. Fix every ERROR; report WARNs.
-3. Build a baseline: create `applications/baseline_<PRIMARY_TAG>/resume.md` from the master's primary archetype, render it with `render_cv.py`, and show the paths. This is the "gold" CV before any tailoring.
-4. Set `onboarding_complete: true` in `profile.yaml`.
-5. Tell the user how to start their first application: share a job URL or paste a JD.
+Run `check_profile.py` and resolve blocking gaps. A qualitative evidence story is valid; a blank section, title alone or arbitrary "complete" flag is not. Only after the career-background gate passes may you write a baseline from the approved primary archetype. Lint it and render with the existing renderer (no application gate is needed for a baseline). A missing PDF converter is an output issue, not missing career background; report it accurately.
 
-## Re-running
+Set `onboarding_complete: true` after substantive discovery is complete. Record `onboarding.last_completed_group` and open questions so returning sessions ask only what remains. Explain how to start an application: share a JD or job URL. If one is already saved, continue its role-specific discovery and fit assessment.
 
-* `profile edit <group>`: re-ask only that group and rewrite only its file or keys.
-* `profile import <file>`: re-run G5 from a file. Ask before replacing `master_cv.md`; back it up.
-* `profile reonboard`: `init_profile.py --force` (backs up first), then all groups.
-* Schema migration: if `schema_version` in `profile.yaml` is lower than the skill's, ask only the groups the changelog lists.
+## Resuming and migration
+
+For schema 1, preserve answered identity/storage/market questions and all source files. Explain the process if it was never explained, then ask only for missing direction, wishes, strengths evidence, ownership/outcomes, constraints and learning scope. Add the new readiness record without resetting data. Update `schema_version: 2` after mapping and reviewing existing material; this alone never grants readiness. See [readiness.md](readiness.md).

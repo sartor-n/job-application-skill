@@ -11,7 +11,7 @@
 <!-- Who is in the room and what each person will care about. Engineers care about trade-offs and rigour; designers about users; leaders about outcomes. -->
 
 ## 1. What they told you to prepare, mapped to your material
-<!-- One sub-heading per theme in the brief. Under each: your strongest example, the number, the trade-off you made, what you would do differently. -->
+<!-- One sub-heading per theme in the brief. Under each: a supported example, verified outcome, tradeoff and what you would do differently. Do not invent a number or experience to fill a gap. -->
 ### a) {{THEME_1}}
 ### b) {{THEME_2}}
 ### c) {{THEME_3}}

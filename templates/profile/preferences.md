@@ -2,6 +2,19 @@
 
 Rules the assistant follows every time it writes about you. Filled during onboarding, edit any time. Each heading is explained in `references/preferences_schema.md`.
 
+## Career Direction and Hopes
+<!-- Separate desired future work from historical experience. Exploration is a valid direction. -->
+{{DESIRED_POSITION_SCOPE_AND_SENIORITY}}
+{{WHY_CHANGE_AND_LONG_TERM_HOPES}}
+{{WORK_TO_DO_MORE_AND_LESS_OF}}
+{{GROWTH_AND_LEARNING_PRIORITIES}}
+
+## Working Preferences and Tradeoffs
+<!-- Priorities, environment, acceptable tradeoffs and dealbreakers; optional private details can be declined. -->
+{{PREFERRED_WORK_AND_ENVIRONMENT}}
+{{PRIORITIES_TRADEOFFS_AND_DEALBREAKERS}}
+{{PRACTICAL_CONSTRAINTS_OR_DECLINED_DETAILS}}
+
 ## Lead Differentiator
 <!-- The one thing few candidates can truthfully claim that you can. Whether the profile summary should open with it. -->
 {{LEAD_DIFFERENTIATOR}}
@@ -38,7 +51,7 @@ Rules the assistant follows every time it writes about you. Filled during onboar
 
 ## Bullet Style
 * Every experience bullet covers one concept, at most two lines, no filler.
-* Lead achievements with the product or thing name, then the result with a number.
+* Lead achievements with the product or thing name, then a defensible outcome. Use numbers only when verified and meaningful.
 * Enforce hardest on the current role.
 
 ## Summary Format
@@ -59,3 +72,7 @@ Rules the assistant follows every time it writes about you. Filled during onboar
 ## Early Career Handling
 <!-- Which early roles to keep in long-format markets and which to drop in short-format markets. -->
 * {{EARLY_CAREER_RULE}}
+
+## Learning Scope
+
+Record each new reusable preference, fact or correction with its intended scope. Ask only when scope is unclear. Application-only and pending feedback stays in the application's learning.json. Remembered facts are available evidence, not mandatory content for every CV.

@@ -22,7 +22,7 @@
 *
 
 ## Updates for your own knowledge base
-<!-- Anything you said about your own experience that is not yet in master_cv.md or knowledge/. Offer to save it. -->
+<!-- Process new facts, corrections and preferences through references/learning.md. Save confirmed durable learning; keep application-only or unresolved scope local. -->
 *
 
 ## Next step and timing

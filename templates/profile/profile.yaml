@@ -1,7 +1,11 @@
 # Profile configuration. Written by onboarding. Safe to hand-edit afterwards.
 # Values in {{DOUBLE_BRACES}} are placeholders that onboarding replaces.
-schema_version: 1
+schema_version: 2
 onboarding_complete: false
+onboarding:
+  process_explained: false
+  last_completed_group: null
+  open_questions: []
 
 identity:
   name: "{{FULL_NAME}}"

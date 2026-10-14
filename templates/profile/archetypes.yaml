@@ -1,6 +1,6 @@
-# Archetypes: the two to four "versions of you" a job description can call for.
+# Archetypes: useful evidenced versions of this candidate. One can be enough.
 # master_cv.md tags sections with [TAG]. [ALL] is reserved and means "used in every archetype".
-# Onboarding offers these three starters. Rename, delete or add entries freely.
+# Optional starters after career discovery. Rename, delete or add entries freely.
 archetypes:
   - tag: IC
     name: Hands-on individual contributor
@@ -9,7 +9,7 @@ archetypes:
       - hands-on delivery, working directly with engineers or specialists
       - technical depth, tooling, experimentation, metrics
     emphasise:
-      - concrete things shipped, with numbers
+      - concrete things shipped, with verified qualitative or quantitative outcomes
       - technical judgement and craft
     drop_from_cv:
       - people-management and organisational design detail
